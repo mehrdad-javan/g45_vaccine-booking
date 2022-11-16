@@ -4,6 +4,8 @@ import se.lexicon.model.Booking;
 import se.lexicon.model.Patient;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,20 @@ public class BookingDaoImpl implements BookingDao {
   }
 
   @Override
-  public void generateBookingTable(LocalDate localDate, int numberOfDays) {
+  public void generateBookingTable(LocalDate startDate, int numberOfDays) {
+    LocalTime startTime = LocalTime.parse("08:00");
+
+    for (int i = 0; i < numberOfDays; i++) {
+      for (int j = 0; j < 10; j++) {
+        Booking booking = new Booking(
+                LocalDateTime.of(startDate.plusDays(i), startTime.plusHours(j)),
+                0,
+                "CV4"
+        );
+        bookingList.add(booking);
+      }
+
+    }
 
   }
 
@@ -51,7 +66,7 @@ public class BookingDaoImpl implements BookingDao {
   @Override
   public boolean reserve(String bookingId, Patient patient) {
     for (Booking booking : bookingList) {
-      if (booking.isVacant()  && booking.getId().equalsIgnoreCase(bookingId)){
+      if (booking.isVacant() && booking.getId().equalsIgnoreCase(bookingId)) {
         booking.setPatient(patient);
         return true;
       }
@@ -62,7 +77,7 @@ public class BookingDaoImpl implements BookingDao {
   @Override
   public boolean cancel(String bookingId, Patient patient) {
     for (Booking booking : bookingList) {
-      if (!booking.isVacant() && booking.getId().equalsIgnoreCase(bookingId)){
+      if (!booking.isVacant() && booking.getId().equalsIgnoreCase(bookingId)) {
         booking.setPatient(null);
         return true;
       }
@@ -72,6 +87,16 @@ public class BookingDaoImpl implements BookingDao {
 
   @Override
   public List<Booking> findBookingBySsn(String ssn) {
-    return null;
+    List<Booking> filteredList = new ArrayList<>();
+
+    for (Booking booking : bookingList){
+      if (booking.getPatient() != null && booking.getPatient().getSsn().equalsIgnoreCase(ssn)){
+        filteredList.add(booking);
+      }
+
+    }
+    return filteredList;
   }
+
+
 }
