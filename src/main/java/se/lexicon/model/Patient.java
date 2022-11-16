@@ -66,4 +66,11 @@ public class Patient {
     this.appUser = appUser;
   }
 
+  @Override
+  public String toString() {
+    return "Patient{" +
+            "ssn='" + ssn + '\'' +
+            ", name='" + name + '\'' +
+            '}';
+  }
 }
